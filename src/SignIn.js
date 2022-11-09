@@ -1,5 +1,6 @@
 import React,{useEffect, useState,useRef} from 'react';
-const SignIn = () => {
+import Home from './Home';
+const SignIn = (props) => {
    // const userRef=useRef();
     const errRef=useRef();
     const [pwd,setPwd]=useState('');
@@ -21,8 +22,7 @@ const SignIn = () => {
     <>
     {success?(
         <section>
-            <h1>Welcome</h1>
-            <br/>
+          <Home  name={props.name}/>
         </section>
     ) : (
    <section>
@@ -47,8 +47,6 @@ const SignIn = () => {
                 required
         /><br/><br/>
         <button>Sign In</button>
-
-
     </form>
    </section>
     )

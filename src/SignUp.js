@@ -1,5 +1,6 @@
 import React,{useEffect, useState,useRef} from 'react';
 import SignIn from './SignIn'
+import './App.css';
 //import { Validator } from 'react';
 const Login = () => {
     const userRef=useRef();
@@ -26,18 +27,13 @@ const Login = () => {
     }
    const checkValidation=(e)=>{
    setCpwd(e.target.value);
-   if(pwd!==cpwd)
-    {
-        setErrMsg("passwords doesnot match");
-        setSuccess(false);
-    }
-   
+  
 }
   return (
-    <>
+    <div className='container'>
 {success?(
     <section>
-         <SignIn/>
+         <SignIn name={name}/>
     </section>
     ) : (
    <section>
@@ -53,6 +49,7 @@ const Login = () => {
                 value={name}
                 required
                 placeholder='Name'
+                pattern='^[0-9a-zA-Z]{8-16}'
         /><br/><br/>
         <input 
                 type='email'
@@ -70,6 +67,7 @@ const Login = () => {
                 value={pwd}
                 required
                 placeholder='Password'
+                errMsg="password should be between 8-16 characters"
         /><br/><br/>
                 <input 
                 type='password'
@@ -78,21 +76,13 @@ const Login = () => {
                 value={cpwd}
                 required
                 placeholder='Confirm Password'
+                errMsg="should match password"
         /><br/><br/>
         <button>Sign Up</button>
-
-
     </form>
-    <p>
-        Already have an Account?<br/>
-        <span className='line'>
-            {/* put router link here */}
-             {/* <a href="#">Sign In</a> */}
-        </span>
-    </p>
    </section>
     )
     }
-  </>
+  </div>
 )}
 export default Login
