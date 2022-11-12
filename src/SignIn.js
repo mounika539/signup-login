@@ -1,56 +1,93 @@
-import React,{useEffect, useState,useRef} from 'react';
+import React,{useEffect, useState} from 'react';
 import Home from './Home';
 const SignIn = (props) => {
-   // const userRef=useRef();
-    const errRef=useRef();
-    const [pwd,setPwd]=useState('');
-   const [email,setEmail]=useState('');
-    const [errMsg,setErrMsg]=useState('');
-    const [success,setSuccess]=useState(false);
-    // useEffect(()=>{
-    //     userRef.current.focus();
-    //  },[])
-     useEffect(()=>{
-        setErrMsg('');
-     },[email,pwd])
-    const handleSubmit= async(e)=>{
-            e.preventDefault();
-            setPwd('');
-            setSuccess(true);
+  const initialValues={
+    email:"",
+    password:"",
+}
+const [formValues,setFormValues]=useState(initialValues);
+const [formErrors,setFormErrors]=useState({});
+const [isSubmit,setIsSubmit]=useState(false);
+const handleChange=(e)=>{
+       const {name,value}=e.target;
+       setFormValues({...formValues,[name]:value}); 
+};
+const handleSubmit=(e)=>{
+        e.preventDefault();
+        setFormErrors(validate(formValues));
+        setIsSubmit(true);
+}
+useEffect(()=>{
+    if(Object.keys(formErrors).length === 0 && isSubmit){
+        console.log(formValues);
     }
-  return (
-    <>
-    {success?(
-        <section>
-          <Home  name={props.name}/>
-        </section>
-    ) : (
-   <section>
-    <p ref={errRef} className={errMsg?"errMsg":"offscreen"} aria-live="assertive">{errMsg}</p>
-    <h1>Sign-In</h1>
-    <form onSubmit={handleSubmit}>
-        <label htmlFor='email'>Email:</label>
+},[formErrors]);
+const validate=(values)=>{
+    const errors={};
+    const regex=/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
+    if(!values.username){
+        errors.username="Username is required";
+    }
+    if(!values.email){
+        errors.email="email is required"
+    }else if(!regex.test(values.email)){
+        errors.email="this.is not a valid email format"
+    }
+    if(!values.password){
+        errors.password="password is required"
+    }else if(values.password.length<8){
+        errors.password="password should be minimum 8 characters"
+    }else if(values.password.length>16){
+        errors.password="password should be less than 16 characters"
+    }
+    if(props.creds.password!==values.password){
+      errors.password="password is wrong"
+    }
+    if(props.creds.email!==values.email){
+      errors.email="Wrong email id"
+    }
+    return errors;
+}
+
+return (
+<div className='container'>
+    {Object.keys(formErrors).length === 0 && isSubmit ? (
+        <div className='success'></div>
+    ):(
+        //<pre>{JSON.stringify(formValues,undefined,2)}</pre>
+        <p>ok</p>
+        )
+    }
+   <form onSubmit={handleSubmit}>
+    <h1>SignIn Form</h1>
+    <div className='divider'></div>
+    <div className='field'>
+        <label>Email</label>
         <input 
-                type='email'
-                id='email'
-                autoComplete="off"
-                onChange={(e)=>setEmail(e.target.value)}
-                value={email}
-                required
-        /><br/><br/>
-        <label htmlFor='password'>Password</label>
-                <input 
-                type='password'
-                id='password'
-                onChange={(e)=>setPwd(e.target.value)}
-                value={pwd}
-                required
-        /><br/><br/>
-        <button>Sign In</button>
-    </form>
-   </section>
-    )
-    }
-  </>
-)}
+                type="text"
+                name="email"
+                placeholder='Email'
+                value={formValues.email}
+                onChange={handleChange}
+        
+        />
+         <p>{formErrors.email}</p>
+        <div className='field'>
+            <label>Password</label>
+            <input
+             type="text"
+             name="password"
+             placeholder='Password'
+             value={formValues.password}
+             onChange={handleChange}
+            />
+
+        </div>
+        <button className='field-bitton'>Submit</button>
+    </div>
+   </form>
+</div>
+)
+}
+  
 export default SignIn

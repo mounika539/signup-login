@@ -1,12 +1,10 @@
 import React from 'react';
 import './App.css';
-import SignUp from './SignUp';
+import Signup from './Signup';
 function App() {
   
   return (
-    <div className="App">
-     <SignUp/>
-    </div>
+         <div className='app'><Signup/></div>
   );
 }
 
