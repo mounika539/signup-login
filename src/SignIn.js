@@ -1,10 +1,12 @@
 import React,{useEffect, useState} from 'react';
-import Home from './Home';
+import { useNavigate ,BrowserRouter as Router,Routes,Route,Link} from 'react-router-dom';
+import Home from './Home'
 const SignIn = (props) => {
   const initialValues={
     email:"",
     password:"",
 }
+const navigate=useNavigate();
 const [formValues,setFormValues]=useState(initialValues);
 const [formErrors,setFormErrors]=useState({});
 const [isSubmit,setIsSubmit]=useState(false);
@@ -48,11 +50,23 @@ const validate=(values)=>{
     }
     return errors;
 }
-
+const handleClick=()=>{
+    navigate('/home')
+}
 return (
 <div className='container'>
     {Object.keys(formErrors).length === 0 && isSubmit ? (
-        <div className='success'></div>
+        <div className='success'>
+             <Router>
+                    <nav>
+                        <Link to='/home'>Home</Link>
+                    </nav>
+                    <Routes>
+                        <Route exact path='/home' element={<Home/>}></Route>
+                    </Routes>
+                </Router>
+
+        </div>
     ):(
         //<pre>{JSON.stringify(formValues,undefined,2)}</pre>
         <p>ok</p>
@@ -83,7 +97,7 @@ return (
             />
 
         </div>
-        <button className='field-bitton'>Submit</button>
+        <button className='field-bitton' onChange={handleClick}>Submit</button>
     </div>
    </form>
 </div>

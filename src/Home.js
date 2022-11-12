@@ -1,11 +1,16 @@
 import React from "react";
-import SignIn from "./SignIn";
-
+import {useNavigate} from 'react-router-dom'
 function Home(props) {
+  const navigate=useNavigate();
+
+
+  const handleClick=()=>{
+      navigate('/signin')
+  }
   return (
-    <div classname="Home">
+    <div classname="home">
       <h1>Welcome {props.name}</h1>
-      <button onClick={()=> <SignIn/>}>LogOut</button>
+      <button onClick={handleClick}>LogOut</button>
     </div>
   )
 }
