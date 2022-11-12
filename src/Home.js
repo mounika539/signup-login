@@ -1,18 +1,15 @@
-import React from "react";
-import {useNavigate} from 'react-router-dom'
+import React ,{useState}from "react";
+import SignIn from "./SignIn";
 function Home(props) {
-  const navigate=useNavigate();
-
-
-  const handleClick=()=>{
-      navigate('/signin')
-  }
+  const [isLogin,setIsLogin]=useState(false);
   return (
-    <div classname="home">
-      <h1>Welcome {props.name}</h1>
-      <button onClick={handleClick}>LogOut</button>
+    <div>
+         {isLogin?(<div><SignIn/></div>):(
+         <div>
+            <h1>Welcome {props.uname}</h1>
+            <button onClick={()=>setIsLogin(true)}>LogOut </button>
+         </div>)}
     </div>
   )
 }
-
 export default Home
