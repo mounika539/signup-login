@@ -1,10 +1,11 @@
 import React,{useEffect, useState} from 'react';
 import Home from './Home'
-const SignIn = (props) => {
+const SignIn = () => {
   const initialValues={
     email:"",
     password:"",
 }
+var user=[{}];
 const [formValues,setFormValues]=useState(initialValues);
 const [formErrors,setFormErrors]=useState({});
 const [isSubmit,setIsSubmit]=useState(false);
@@ -12,6 +13,8 @@ const handleChange=(e)=>{
        const {name,value}=e.target;
        setFormValues({...formValues,[name]:value}); 
 };
+const  getUserArr=localStorage.getItem('user');
+console.log(getUserArr);
 const handleSubmit=(e)=>{
         e.preventDefault();
         setFormErrors(validate(formValues));
@@ -37,15 +40,25 @@ const validate=(values)=>{
     }else if(values.password.length>16){
         errors.password="password should be less than 16 characters"
     }
+    else{
+      if(getUserArr && getUserArr.length) {
+      const userData=JSON.parse(getUserArr);
+       const userLogin=userData.filter((el,k)=>{
+            return el.email===formValues.email && el.password===formValues.password ;
+       } );
+            if(userLogin.length===0){
+            errors.email="this email/password does not exist";}
+      }
+    }
     return errors;
 }
-console.log(props.uname);
 return (
 <div className='container'>
 
     {(Object.keys(formErrors).length === 0 && isSubmit)?(
         <div className='success'>
-             <Home uname={props.uname}/>
+            {console.log(getUserArr.username)}
+             <Home/>
         </div>
 ):( <form onSubmit={handleSubmit}>
     <h1>SignIn Form</h1>
@@ -58,17 +71,19 @@ return (
                 placeholder='Email'
                 value={formValues.email}
                 onChange={handleChange}
+                autoComplete="off"
         
         />
          <p>{formErrors.email}</p>
         <div className='field'>
             <label>Password</label>
             <input
-                type="text"
+                type="password"
                 name="password"
                 placeholder='Password'
                 value={formValues.password}
                 onChange={handleChange}
+                autoComplete="off"
             />
              <p>{formErrors.password}</p>
         </div>

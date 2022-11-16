@@ -7,6 +7,7 @@ function Signup() {
         password:"",
         cpassword:""
     }
+    const [data,setData]=useState([]); 
     const [isLogin,setIsLogin]=useState(false);
     const [formValues,setFormValues]=useState(initialValues);
     const [formErrors,setFormErrors]=useState({});
@@ -15,11 +16,14 @@ function Signup() {
     const handleChange=(e)=>{
            const {name,value}=e.target;
            setFormValues({...formValues,[name]:value}); 
+           console.log(e.target.value);
     };
     const handleSubmit=(e)=>{
             e.preventDefault();
             setFormErrors(validate(formValues));
             setIsSubmit(true);
+            localStorage.setItem("user",JSON.stringify([...data,formValues]));
+
     }
     useEffect(()=>{
         if(Object.keys(formErrors).length === 0 && isSubmit){
@@ -28,7 +32,6 @@ function Signup() {
     },[formErrors]);
     const validate=(values)=>{
         const errors={};
-        var passw=/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/;
         const regex=/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
         if(!values.username){
             errors.username="Username is required";
@@ -43,9 +46,6 @@ function Signup() {
         }
         if(values.password!==values.cpassword){
             errors.cpassword="confirm password should be same as password"
-        }
-        if(values.password.match(passw)){
-            errors.password="password must contain a digit,lowercase,uppercase character"
         }
          else if(values.password.length<8){
              errors.password="password should be minimum 8 characters"
@@ -67,7 +67,7 @@ function Signup() {
     <div className='container'>
     { isLogin?(
             <div className='container'>
-                     <SignIn uname= {formValues.username}/>
+                     <SignIn />
             </div> 
            ) :( 
            
@@ -84,6 +84,7 @@ function Signup() {
                     value={formValues.user}
                     placeholder="Username"
                     onChange={handleChange}
+                    autoComplete="off"
                 />
                 </div>
                 <p>{formErrors.username}</p>
@@ -95,16 +96,18 @@ function Signup() {
                     placeholder='Email'
                     value={formValues.email}
                     onChange={handleChange}
+                    autoComplete="off"
         />
          <p>{formErrors.email}</p>
            <div className='field'>
             <label>Password</label>
             <input
-             type="text"
+             type="password"
              name="password"
              placeholder='Password'
              value={formValues.password}
              onChange={handleChange}
+             autoComplete="off"
             />
     
         </div>
@@ -112,11 +115,12 @@ function Signup() {
         <div className='field'>
             <label>Confirm Password</label>
             <input
-             type="text"
+             type="password"
              name="cpassword"
              placeholder='Password'
              value={formValues.cpassword}
              onChange={handleChange}
+             autoComplete="off"
             />
         </div>
         <p>{formErrors.cpassword}</p>
